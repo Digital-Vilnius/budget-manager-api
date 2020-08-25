@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>BudgetManager.Models</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BudgetManager.Constants\BudgetManager.Constants.csproj" />
+      <ProjectReference Include="..\BudgetManager.Contracts\BudgetManager.Contracts.csproj" />
+      <ProjectReference Include="..\BudgetManager.Dtos\BudgetManager.Dtos.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    </ItemGroup>
+
+</Project>
