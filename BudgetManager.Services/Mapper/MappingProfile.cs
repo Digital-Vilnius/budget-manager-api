@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BudgetManager.Contracts;
+using BudgetManager.Contracts.Account;
 using BudgetManager.Contracts.AccountUser;
 using BudgetManager.Contracts.Category;
 using BudgetManager.Contracts.Invitation;
@@ -91,11 +92,29 @@ namespace BudgetManager.Services.Mapper
             CreateMap<AddTransactionRequest, Transaction>();
 
             // Accounts
-            CreateMap<Account, AccountDto>();
+            CreateMap<ListAccountsRequest, AccountsFilter>();
+            CreateMap<Account, AccountDto>()
+                .ForMember(
+                    dest => dest.Balance,
+                    opt => opt.MapFrom<BalanceResolver>()
+                )
+                .ForMember(
+                    dest => dest.Permissions,
+                    opt => opt.MapFrom<PermissionsResolver>()
+                )
+                .ForMember(
+                    dest => dest.Roles,
+                    opt => opt.MapFrom<RolesResolver>()
+                );
+            
             CreateMap<Account, AccountsListItemDto>()
                 .ForMember(
                     dest => dest.Balance,
                     opt => opt.MapFrom<BalanceResolver>()
+                )
+                .ForMember(
+                    dest => dest.Roles,
+                    opt => opt.MapFrom<RolesResolver>()
                 );
             
             // Account users

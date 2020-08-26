@@ -1,4 +1,5 @@
-﻿using BudgetManager.Constants.Enums;
+﻿using System.Collections.Generic;
+using BudgetManager.Constants.Enums;
 
 namespace BudgetManager.Dtos.Account
 {
@@ -9,5 +10,7 @@ namespace BudgetManager.Dtos.Account
         public string Type { get; set; }
         
         public decimal Balance { get; set; }
+        
+        public List<string> Roles { get; set; }
     }
 }

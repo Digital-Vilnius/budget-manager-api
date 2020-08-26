@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Models.Repositories
 {
-    public interface IAccountRepository : IBaseRepository<Account, BaseFilter>
+    public interface IAccountRepository : IBaseRepository<Account, AccountsFilter>
     {
     }
 }

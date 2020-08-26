@@ -34,7 +34,10 @@ namespace BudgetManager.Services
         
         public async Task<ListResponse<AccountsListItemDto>> ListAsync(ListAccountsRequest request)
         {
-            var filter = _mapper.Map<ListAccountsRequest, BaseFilter>(request);
+            var loggedUser = await _authenticationService.GetLoggedUserAsync();
+
+            var filter = _mapper.Map<ListAccountsRequest, AccountsFilter>(request);
+            filter.UserId = loggedUser.User.Id;
 
             var accounts = await _accountRepository.GetListAsync(filter);
             var accountsCount = await _accountRepository.CountAsync(filter);
