@@ -7,10 +7,10 @@ namespace BudgetManager.Models.Services
 {
     public interface ITransactionService
     {
-        Task<ListResponse<TransactionsListItemDto>> ListAsync(ListTransactionsRequest request);
-        Task<ResultResponse<TransactionDto>> GetAsync(int id);
-        Task<BaseResponse> AddAsync(AddTransactionRequest request);
-        Task<BaseResponse> EditAsync(EditTransactionRequest request);
-        Task<BaseResponse> DeleteAsync(int id);
+        Task<ListResponse<TransactionsListItemDto>> ListAsync(ListTransactionsRequest request, int accountId);
+        Task<ResultResponse<TransactionDto>> GetAsync(int id, int accountId);
+        Task<BaseResponse> AddAsync(AddTransactionRequest request, int accountId);
+        Task<BaseResponse> EditAsync(EditTransactionRequest request, int accountId);
+        Task<BaseResponse> DeleteAsync(int id, int accountId);
     }
 }

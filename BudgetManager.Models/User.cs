@@ -19,6 +19,6 @@ namespace BudgetManager.Models
         
         public string RefreshToken { get; set; }
         
-        public List<AccountUser> UserAccounts { get; set; } = new List<AccountUser>();
+        public List<AccountUser> UserAccounts { get; set; }
     }
 }

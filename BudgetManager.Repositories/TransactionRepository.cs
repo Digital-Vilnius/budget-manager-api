@@ -32,6 +32,8 @@ namespace BudgetManager.Repositories
 
         protected override IQueryable<Transaction> ApplyFilter(IQueryable<Transaction> query, TransactionsFilter filter)
         {
+            query = query.Where(transaction => transaction.Category.AccountId == filter.AccountId);
+            
             if (filter.Keyword != null)
             {
                 query = query.Where(transaction => transaction.Description.Contains(filter.Keyword) || transaction.Category.Title.Contains(filter.Keyword));
@@ -66,8 +68,6 @@ namespace BudgetManager.Repositories
             {
                 query = query.Where(transaction => filter.TagsIds.Contains(transaction.TagId.Value));
             }
-            
-            query = query.Where(transaction => transaction.Category.AccountId == filter.AccountId);
 
             return query;
         }

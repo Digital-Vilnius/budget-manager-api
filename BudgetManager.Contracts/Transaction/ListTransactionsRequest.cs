@@ -6,9 +6,7 @@ namespace BudgetManager.Contracts.Transaction
     public class ListTransactionsRequest : ListRequest
     {
         public string Keyword { get; set; }
-        
-        public int AccountId { get; set; }
-        
+
         public DateTime? DateFrom { get; set; }
         
         public DateTime? DateTo { get; set; }

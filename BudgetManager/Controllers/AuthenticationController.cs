@@ -17,9 +17,8 @@ namespace BudgetManager.Controllers
         {
             _authenticationService = authenticationService;
         }
-
-        [Route("login")]
-        [HttpPost]
+        
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
@@ -28,9 +27,8 @@ namespace BudgetManager.Controllers
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
-
-        [Route("register")]
-        [HttpPost]
+        
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
@@ -39,19 +37,17 @@ namespace BudgetManager.Controllers
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
-
-        [Route("logged-user")]
+        
         [Authorize]
-        [HttpGet]
+        [HttpGet("logged-user")]
         public async Task<IActionResult> Get()
         {
             var response = await _authenticationService.GetLoggedUserDtoAsync();
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
-
-        [Route("refresh-token")]
-        [HttpPost]
+        
+        [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());

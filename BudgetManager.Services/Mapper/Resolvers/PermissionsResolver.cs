@@ -6,7 +6,7 @@ using BudgetManager.Models.Services;
 
 namespace BudgetManager.Services.Mapper.Resolvers
 {
-    public class PermissionsResolver : IValueResolver<AccountUser, object, List<Permissions>>
+    public class PermissionsResolver : IValueResolver<AccountUser, object, List<string>>
     {
         private readonly IPermissionsService _permissionsService;
 
@@ -15,7 +15,7 @@ namespace BudgetManager.Services.Mapper.Resolvers
             _permissionsService = permissionsService;
         }
 
-        public List<Permissions> Resolve(AccountUser accountUser, object destination, List<Permissions> destMember, ResolutionContext context)
+        public List<string> Resolve(AccountUser accountUser, object destination, List<string> destMember, ResolutionContext context)
         {
             return _permissionsService.GetPermissions(accountUser.Roles);
         }

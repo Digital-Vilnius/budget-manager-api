@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BudgetManager.Constants.Enums;
 using BudgetManager.Contracts;
 using BudgetManager.Contracts.Authentication;
 using BudgetManager.Dtos.Authentication;
@@ -16,7 +14,6 @@ namespace BudgetManager.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IAccountUserRepository _accountUserRepository;
         private readonly IEncryptionService _encryptionService;
         private readonly ITokenService _tokenService;
         private readonly HttpContext _httpContext;
@@ -25,7 +22,6 @@ namespace BudgetManager.Services
 
         public AuthenticationService
         (
-            IAccountUserRepository accountUserRepository,
             IUnitOfWork unitOfWork,
             IUserRepository userRepository,
             IEncryptionService encryptionService,
@@ -34,7 +30,6 @@ namespace BudgetManager.Services
             IMapper mapper
         )
         {
-            _accountUserRepository = accountUserRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _httpContext = httpContextAccessor.HttpContext;
@@ -81,8 +76,7 @@ namespace BudgetManager.Services
             var user = await _userRepository.GetAsync(user => user.Id == int.Parse(id));
             if (user == null || refreshToken != null && user.RefreshToken != refreshToken) return null;
 
-            if (!_httpContext.Request.Headers.ContainsKey("Authorization") ||
-                !_httpContext.Request.Headers["Authorization"][0].StartsWith("Bearer ")) return null;
+            if (!_httpContext.Request.Headers.ContainsKey("Authorization") || !_httpContext.Request.Headers["Authorization"][0].StartsWith("Bearer ")) return null;
             var token = _httpContext.Request.Headers["Authorization"][0].Substring("Bearer ".Length);
 
             var loggedUser = _mapper.Map<User, LoggedUser>(user);
@@ -100,43 +94,29 @@ namespace BudgetManager.Services
             await _unitOfWork.SaveChangesAsync();
 
             var token = _tokenService.GenerateToken(user.Id);
-            var loggedUser = await GetLoggedUserAsync();
-            loggedUser.Token = token;
+            var loggedUser = _mapper.Map<User, LoggedUser>(user);
             var loggedUserDto = _mapper.Map<LoggedUser, LoggedUserDto>(loggedUser);
+            loggedUserDto.Token = token;
             return new ResultResponse<LoggedUserDto>(loggedUserDto);
         }
 
         public async Task<BaseResponse> RegisterAsync(RegisterRequest request)
         {
             var user = await _userRepository.GetAsync(user => user.Email == request.Email);
-            if (user == null)
-            {
-                var passwordSalt = _encryptionService.CreateSalt();
-                var passwordHash = _encryptionService.CreateHash(request.Password, passwordSalt);
-                
-                user = new User
-                {
-                    FullName = request.FullName,
-                    Email = request.Email,
-                    PasswordHash = passwordHash,
-                    PasswordSalt = passwordSalt,
-                };
-                
-                await _userRepository.AddAsync(user);
-            }
+            if (user != null) return new ResultResponse<LoggedUserDto>("User with this email is already exist");
             
-            var accountUser = new AccountUser
+            var passwordSalt = _encryptionService.CreateSalt();
+            var passwordHash = _encryptionService.CreateHash(request.Password, passwordSalt);
+                
+            user = new User
             {
-                User = user,
-                Account = new Account
-                {
-                    Title = request.Title,
-                    Type = request.Type
-                },
-                Roles = new List<Roles>()
+                FullName = request.FullName,
+                Email = request.Email,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
             };
-
-            await _accountUserRepository.AddAsync(accountUser);
+                
+            await _userRepository.AddAsync(user);
             await _unitOfWork.SaveChangesAsync();
             return new BaseResponse();
         }

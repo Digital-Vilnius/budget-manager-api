@@ -7,10 +7,10 @@ namespace BudgetManager.Models.Services
 {
     public interface ITagService
     {
-        Task<ListResponse<TagsListItemDto>> ListAsync(ListTagsRequest request);
-        Task<ResultResponse<TagDto>> GetAsync(int id);
-        Task<BaseResponse> AddAsync(AddTagRequest request);
-        Task<BaseResponse> EditAsync(EditTagRequest request);
-        Task<BaseResponse> DeleteAsync(int id);
+        Task<ListResponse<TagsListItemDto>> ListAsync(ListTagsRequest request, int accountId);
+        Task<ResultResponse<TagDto>> GetAsync(int id, int accountId);
+        Task<BaseResponse> AddAsync(AddTagRequest request, int accountId);
+        Task<BaseResponse> EditAsync(EditTagRequest request, int accountId);
+        Task<BaseResponse> DeleteAsync(int id, int accountId);
     }
 }

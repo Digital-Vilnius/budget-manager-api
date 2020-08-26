@@ -7,6 +7,6 @@ namespace BudgetManager.Models.Services
 {
     public interface IAccountUserService
     {
-        Task<ListResponse<AccountUsersListItemDto>> ListAsync(ListAccountUsersRequest request);
+        Task<ListResponse<AccountUsersListItemDto>> ListAsync(ListAccountUsersRequest request, int accountId);
     }
 }

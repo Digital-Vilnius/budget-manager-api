@@ -35,10 +35,11 @@ namespace BudgetManager.Services
             _authenticationService = authenticationService;
         }
 
-        public async Task<ListResponse<CategoriesListItemDto>> ListAsync(ListCategoriesRequest request)
+        public async Task<ListResponse<CategoriesListItemDto>> ListAsync(ListCategoriesRequest request, int accountId)
         {
             var filter = _mapper.Map<ListCategoriesRequest, CategoriesFilter>(request);
             var paging = _mapper.Map<ListCategoriesRequest, Paging>(request);
+            filter.AccountId = accountId;
 
             var categories = await _categoryRepository.GetListAsync(filter, null, paging);
             var categoriesCount = await _categoryRepository.CountAsync(filter);
@@ -47,29 +48,32 @@ namespace BudgetManager.Services
             return new ListResponse<CategoriesListItemDto>(categoriesDtosList, categoriesCount);
         }
 
-        public async Task<ResultResponse<CategoryDto>> GetAsync(int id)
+        public async Task<ResultResponse<CategoryDto>> GetAsync(int id, int accountId)
         {
-            var category = await _categoryRepository.GetAsync(category => category.Id == id);
+            var category = await _categoryRepository.GetAsync(category => category.Id == id && category.AccountId == accountId);
             if (category == null) return new ResultResponse<CategoryDto>("Category is not found");
 
             var categoryDto = _mapper.Map<Category, CategoryDto>(category);
             return new ResultResponse<CategoryDto>(categoryDto);
         }
 
-        public async Task<BaseResponse> AddAsync(AddCategoryRequest request)
+        public async Task<BaseResponse> AddAsync(AddCategoryRequest request, int accountId)
         {
-            var category = _mapper.Map<AddCategoryRequest, Category>(request);
             var loggedUser = await _authenticationService.GetLoggedUserAsync();
-            var accountUser = await _accountUserRepository.GetAsync(accountUser => accountUser.UserId == loggedUser.User.Id && accountUser.AccountId == request.AccountId);
+            var accountUser = await _accountUserRepository.GetAsync(accountUser => accountUser.UserId == loggedUser.User.Id && accountUser.AccountId == accountId);
+            
+            var category = _mapper.Map<AddCategoryRequest, Category>(request);
+            category.AccountId = accountId;
             category.CreatedBy = accountUser;
+            
             await _categoryRepository.AddAsync(category);
             await _unitOfWork.SaveChangesAsync();
             return new BaseResponse();
         }
 
-        public async Task<BaseResponse> EditAsync(EditCategoryRequest request)
+        public async Task<BaseResponse> EditAsync(EditCategoryRequest request, int accountId)
         {
-            var category = await _categoryRepository.GetAsync(category => category.Id == request.Id);
+            var category = await _categoryRepository.GetAsync(category => category.Id == request.Id && category.AccountId == accountId);
             if (category == null) return new BaseResponse("Category is not found");
             
             category.Title = request.Title;
@@ -79,9 +83,9 @@ namespace BudgetManager.Services
             return new BaseResponse();
         }
 
-        public async Task<BaseResponse> DeleteAsync(int id)
+        public async Task<BaseResponse> DeleteAsync(int id, int accountId)
         {
-            var category = await _categoryRepository.GetAsync(category => category.Id == id);
+            var category = await _categoryRepository.GetAsync(category => category.Id == id && category.AccountId == accountId);
             if (category == null) return new BaseResponse("Category is not found");
 
             _categoryRepository.Delete(category);

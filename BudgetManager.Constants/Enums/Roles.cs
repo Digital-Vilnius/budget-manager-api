@@ -2,7 +2,9 @@
 {
     public enum Roles
     {
+        Owner,
         Admin,
-        Customer
+        User,
+        Guest
     }
 }

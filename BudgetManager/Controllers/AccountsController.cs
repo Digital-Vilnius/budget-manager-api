@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BudgetManager.Constants.Constants;
 using BudgetManager.Contracts.Account;
 using BudgetManager.Models.Services;
 using BudgetManager.System.Extensions;
@@ -19,7 +20,7 @@ namespace BudgetManager.Controllers
         }
         
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(AccountPermissions.Account.Delete)]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var response = await _accountService.DeleteAsync(id);
@@ -28,7 +29,6 @@ namespace BudgetManager.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> List([FromQuery] ListAccountsRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
@@ -39,7 +39,6 @@ namespace BudgetManager.Controllers
         }
         
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             var response = await _accountService.GetAsync(id);

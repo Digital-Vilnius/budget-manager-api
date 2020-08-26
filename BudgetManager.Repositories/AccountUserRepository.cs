@@ -20,12 +20,12 @@ namespace BudgetManager.Repositories
 
         protected override IQueryable<AccountUser> ApplyFilter(IQueryable<AccountUser> query, AccountUsersFilter filter)
         {
-            if (filter.Keyword != null) query = query.Where(accountUser => 
-                accountUser.User.Email.Contains(filter.Keyword) 
-                || accountUser.User.FullName.Contains(filter.Keyword)
-            );
-            
             query = query.Where(accountUser => accountUser.AccountId == filter.AccountId);
+            
+            if (filter.Keyword != null)
+            {
+                query = query.Where(accountUser => accountUser.User.Email.Contains(filter.Keyword) || accountUser.User.FullName.Contains(filter.Keyword));
+            }
 
             return query;
         }

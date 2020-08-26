@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BudgetManager.Constants.Constants;
 using BudgetManager.Contracts.Transaction;
 using BudgetManager.Models.Services;
 using BudgetManager.System.Extensions;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BudgetManager.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/account/{accountId}/[controller]")]
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
@@ -19,52 +20,52 @@ namespace BudgetManager.Controllers
         }
         
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Add([FromBody] AddTransactionRequest request)
+        [Authorize(AccountPermissions.Transactions.Add)]
+        public async Task<IActionResult> Add([FromBody] AddTransactionRequest request, [FromRoute] int accountId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
 
-            var response = await _transactionService.AddAsync(request);
+            var response = await _transactionService.AddAsync(request, accountId);
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
         
         [HttpPut]
-        [Authorize]
-        public async Task<IActionResult> Edit([FromBody] EditTransactionRequest request)
+        [Authorize(AccountPermissions.Transactions.Edit)]
+        public async Task<IActionResult> Edit([FromBody] EditTransactionRequest request, [FromRoute] int accountId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
 
-            var response = await _transactionService.EditAsync(request);
+            var response = await _transactionService.EditAsync(request, accountId);
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
         
         [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [Authorize(AccountPermissions.Transactions.Delete)]
+        public async Task<IActionResult> Delete([FromRoute] int id, [FromRoute] int accountId)
         {
-            var response = await _transactionService.DeleteAsync(id);
+            var response = await _transactionService.DeleteAsync(id, accountId);
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
 
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> List([FromQuery] ListTransactionsRequest request)
+        [Authorize(AccountPermissions.Transactions.View)]
+        public async Task<IActionResult> List([FromQuery] ListTransactionsRequest request, [FromRoute] int accountId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
 
-            var response = await _transactionService.ListAsync(request);
+            var response = await _transactionService.ListAsync(request, accountId);
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
         
         [HttpGet("{id}")]
-        [Authorize]
-        public async Task<IActionResult> Get([FromRoute] int id)
+        [Authorize(AccountPermissions.Transactions.View)]
+        public async Task<IActionResult> Get([FromRoute] int id, [FromRoute] int accountId)
         {
-            var response = await _transactionService.GetAsync(id);
+            var response = await _transactionService.GetAsync(id, accountId);
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }

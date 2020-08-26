@@ -12,6 +12,7 @@ using BudgetManager.Dtos.Category;
 using BudgetManager.Dtos.Invitation;
 using BudgetManager.Dtos.Tag;
 using BudgetManager.Dtos.Transaction;
+using BudgetManager.Dtos.User;
 using BudgetManager.Models;
 using BudgetManager.Models.Filters;
 using BudgetManager.Services.Mapper.Resolvers;
@@ -30,18 +31,6 @@ namespace BudgetManager.Services.Mapper
                 .ForMember(
                     dest => dest.RefreshToken,
                     opt => opt.MapFrom(src => src.User.RefreshToken)
-                )
-                .ForMember(
-                    dest => dest.Locale,
-                    opt => opt.MapFrom(src => src.User.Locale)
-                )
-                .ForMember(
-                    dest => dest.FullName,
-                    opt => opt.MapFrom(src => src.User.FullName)
-                )
-                .ForMember(
-                    dest => dest.Email,
-                    opt => opt.MapFrom(src => src.User.Email)
                 );
 
             CreateMap<User, LoggedUser>()
@@ -53,6 +42,10 @@ namespace BudgetManager.Services.Mapper
             CreateMap<ListRequest, Paging>();
             CreateMap<ListRequest, Sort>();
             CreateMap<ListRequest, BaseFilter>();
+            
+            // User
+            
+            CreateMap<User, UserDto>();
             
             // Tags
             
@@ -90,7 +83,7 @@ namespace BudgetManager.Services.Mapper
             
             CreateMap<AddCategoryRequest, Category>();
             CreateMap<ListCategoriesRequest, CategoriesFilter>();
-            
+
             // Transactions
             CreateMap<Transaction, TransactionsListItemDto>();
             CreateMap<ListTransactionsRequest, TransactionsFilter>();

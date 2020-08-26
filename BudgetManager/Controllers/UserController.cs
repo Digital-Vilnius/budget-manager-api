@@ -18,8 +18,16 @@ namespace BudgetManager.Controllers
             _userService = userService;
         }
         
-        [Route("details")]
-        [HttpPut]
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Get()
+        {
+            var response = await _userService.GetAsync();
+            if (!response.IsValid) return BadRequest(response.Message);
+            return Ok(response);
+        }
+        
+        [HttpPut("details")]
         [Authorize]
         public async Task<IActionResult> EditDetails([FromBody] EditUserDetailsRequest request)
         {
@@ -30,8 +38,7 @@ namespace BudgetManager.Controllers
             return Ok(response);
         }
         
-        [Route("locale")]
-        [HttpPut]
+        [HttpPut("locale")]
         [Authorize]
         public async Task<IActionResult> EditLocale([FromBody] EditUserLocaleRequest request)
         {

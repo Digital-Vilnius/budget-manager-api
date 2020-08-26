@@ -41,10 +41,11 @@ namespace BudgetManager.Services
             _transactionRepository = transactionRepository;
         }
 
-        public async Task<ListResponse<TransactionsListItemDto>> ListAsync(ListTransactionsRequest request)
+        public async Task<ListResponse<TransactionsListItemDto>> ListAsync(ListTransactionsRequest request, int accountId)
         {
             var filter = _mapper.Map<ListTransactionsRequest, TransactionsFilter>(request);
             var paging = _mapper.Map<ListTransactionsRequest, Paging>(request);
+            filter.AccountId = accountId;
 
             var transactions = await _transactionRepository.GetListAsync(filter, null, paging);
             var transactionsCount = await _transactionRepository.CountAsync(filter);
@@ -53,18 +54,18 @@ namespace BudgetManager.Services
             return new ListResponse<TransactionsListItemDto>(transactionsDtosList, transactionsCount);
         }
 
-        public async Task<ResultResponse<TransactionDto>> GetAsync(int id)
+        public async Task<ResultResponse<TransactionDto>> GetAsync(int id, int accountId)
         {
-            var transaction = await _transactionRepository.GetAsync(transaction => transaction.Id == id);
+            var transaction = await _transactionRepository.GetAsync(transaction => transaction.Id == id && transaction.Category.AccountId == accountId);
             if (transaction == null) return new ResultResponse<TransactionDto>("Transaction is not found");
 
             var transactionDto = _mapper.Map<Transaction, TransactionDto>(transaction);
             return new ResultResponse<TransactionDto>(transactionDto);
         }
 
-        public async Task<BaseResponse> AddAsync(AddTransactionRequest request)
+        public async Task<BaseResponse> AddAsync(AddTransactionRequest request, int accountId)
         {
-            var category = await _categoryRepository.GetAsync(category => category.Id == request.CategoryId);
+            var category = await _categoryRepository.GetAsync(category => category.Id == request.CategoryId && category.AccountId == accountId);
             if (category == null) return new ResultResponse<TransactionDto>("Category is not found");
 
             if (request.TagId.HasValue)
@@ -88,12 +89,12 @@ namespace BudgetManager.Services
             return new BaseResponse();
         }
 
-        public async Task<BaseResponse> EditAsync(EditTransactionRequest request)
+        public async Task<BaseResponse> EditAsync(EditTransactionRequest request, int accountId)
         {
             var transaction = await _transactionRepository.GetAsync(transaction => transaction.Id == request.Id);
             if (transaction == null) return new BaseResponse("Transaction is not found");
 
-            var category = await _categoryRepository.GetAsync(category => category.Id == request.CategoryId);
+            var category = await _categoryRepository.GetAsync(category => category.Id == request.CategoryId && category.AccountId == accountId);
             if (category == null) return new ResultResponse<TransactionDto>("Category is not found");
             
             if (request.TagId.HasValue)
@@ -113,9 +114,9 @@ namespace BudgetManager.Services
             return new BaseResponse();
         }
 
-        public async Task<BaseResponse> DeleteAsync(int id)
+        public async Task<BaseResponse> DeleteAsync(int id, int accountId)
         {
-            var transaction = await _transactionRepository.GetAsync(transaction => transaction.Id == id);
+            var transaction = await _transactionRepository.GetAsync(transaction => transaction.Id == id && transaction.Category.AccountId == accountId);
             if (transaction == null) return new BaseResponse("Transaction is not found");
 
             _transactionRepository.Delete(transaction);

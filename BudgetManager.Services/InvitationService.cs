@@ -35,10 +35,11 @@ namespace BudgetManager.Services
             _authenticationService = authenticationService;
         }
         
-        public async Task<ListResponse<InvitationsListItemDto>> ListAsync(ListInvitationsRequest request)
+        public async Task<ListResponse<InvitationsListItemDto>> ListAsync(ListInvitationsRequest request, int accountId)
         {
             var filter = _mapper.Map<ListInvitationsRequest, InvitationsFilter>(request);
             var paging = _mapper.Map<ListInvitationsRequest, Paging>(request);
+            filter.AccountId = accountId;
 
             var invitations = await _invitationRepository.GetListAsync(filter, null, paging);
             var invitationsCount = await _invitationRepository.CountAsync(filter);
@@ -47,29 +48,32 @@ namespace BudgetManager.Services
             return new ListResponse<InvitationsListItemDto>(invitationsDtosList, invitationsCount);
         }
 
-        public async Task<ResultResponse<InvitationDto>> GetAsync(int id)
+        public async Task<ResultResponse<InvitationDto>> GetAsync(int id, int accountId)
         {
-            var invitation = await _invitationRepository.GetAsync(invitation => invitation.Id == id);
+            var invitation = await _invitationRepository.GetAsync(invitation => invitation.Id == id && invitation.AccountId == accountId);
             if (invitation == null) return new ResultResponse<InvitationDto>("Invitation is not found");
 
             var invitationDto = _mapper.Map<Invitation, InvitationDto>(invitation);
             return new ResultResponse<InvitationDto>(invitationDto);
         }
 
-        public async Task<BaseResponse> AddAsync(AddInvitationRequest request)
+        public async Task<BaseResponse> AddAsync(AddInvitationRequest request, int accountId)
         {
-            var invitation = _mapper.Map<AddInvitationRequest, Invitation>(request);
             var loggedUser = await _authenticationService.GetLoggedUserAsync();
-            var accountUser = await _accountUserRepository.GetAsync(accountUser => accountUser.UserId == loggedUser.User.Id && accountUser.AccountId == request.AccountId);
+            var accountUser = await _accountUserRepository.GetAsync(accountUser => accountUser.UserId == loggedUser.User.Id && accountUser.AccountId == accountId);
+            
+            var invitation = _mapper.Map<AddInvitationRequest, Invitation>(request);
+            invitation.AccountId = accountId;
             invitation.CreatedBy = accountUser;
+            
             await _invitationRepository.AddAsync(invitation);
             await _unitOfWork.SaveChangesAsync();
             return new BaseResponse();
         }
 
-        public async Task<BaseResponse> DeleteAsync(int id)
+        public async Task<BaseResponse> DeleteAsync(int id, int accountId)
         {
-            var invitation = await _invitationRepository.GetAsync(invitation => invitation.Id == id);
+            var invitation = await _invitationRepository.GetAsync(invitation => invitation.Id == id && invitation.AccountId == accountId);
             if (invitation == null) return new BaseResponse("Invitation is not found");
 
             _invitationRepository.Delete(invitation);

@@ -27,7 +27,7 @@ namespace BudgetManager.Repositories.Context
                 .HasConversion(new EnumToStringConverter<AccountTypes>());
             
             // User
-            
+
             modelBuilder
                 .Entity<User>()
                 .Property(user => user.Status)
@@ -80,6 +80,11 @@ namespace BudgetManager.Repositories.Context
                 .HasForeignKey(accountUser => accountUser.UserId);
             
             // Invitation
+            
+            modelBuilder
+                .Entity<Invitation>()
+                .Property(invitation => invitation.Roles)
+                .HasConversion(rolesConverter);
             
             modelBuilder
                 .Entity<Invitation>()

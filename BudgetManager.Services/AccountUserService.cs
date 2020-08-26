@@ -22,10 +22,11 @@ namespace BudgetManager.Services
             _accountUserRepository = accountUserRepository;
         }
         
-        public async Task<ListResponse<AccountUsersListItemDto>> ListAsync(ListAccountUsersRequest request)
+        public async Task<ListResponse<AccountUsersListItemDto>> ListAsync(ListAccountUsersRequest request, int accountId)
         {
             var filter = _mapper.Map<ListAccountUsersRequest, AccountUsersFilter>(request);
             var paging = _mapper.Map<ListAccountUsersRequest, Paging>(request);
+            filter.AccountId = accountId;
 
             var accountUsers = await _accountUserRepository.GetListAsync(filter, null, paging);
             var accountUsersCount = await _accountUserRepository.CountAsync(filter);

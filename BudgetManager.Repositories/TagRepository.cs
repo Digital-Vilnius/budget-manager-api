@@ -23,12 +23,12 @@ namespace BudgetManager.Repositories
 
         protected override IQueryable<Tag> ApplyFilter(IQueryable<Tag> query, TagsFilter filter)
         {
-            if (filter.Keyword != null) query = query.Where(tag => 
-                tag.Title.Contains(filter.Keyword) 
-                || tag.Description.Contains(filter.Keyword)
-            );
-            
             query = query.Where(tag => tag.AccountId == filter.AccountId);
+            
+            if (filter.Keyword != null)
+            {
+                query = query.Where(tag => tag.Title.Contains(filter.Keyword) || tag.Description.Contains(filter.Keyword));
+            }
 
             return query;
         }
