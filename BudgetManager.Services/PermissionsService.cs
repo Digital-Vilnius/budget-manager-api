@@ -89,8 +89,6 @@ namespace BudgetManager.Services
                 permissions.Add(AccountPermissions.Tags.View);
                 // Transactions
                 permissions.Add(AccountPermissions.Transactions.View);
-                // Account users
-                permissions.Add(AccountPermissions.AccountUsers.View);
             }
 
             
