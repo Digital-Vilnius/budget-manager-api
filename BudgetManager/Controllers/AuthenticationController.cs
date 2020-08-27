@@ -47,6 +47,17 @@ namespace BudgetManager.Controllers
             return Ok(response);
         }
         
+        [HttpPut("logged-user")]
+        [Authorize]
+        public async Task<IActionResult> EditDetails([FromBody] EditLoggedUserRequest request)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
+
+            var response = await _authenticationService.EditAsync(request);
+            if (!response.IsValid) return BadRequest(response.Message);
+            return Ok(response);
+        }
+        
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {

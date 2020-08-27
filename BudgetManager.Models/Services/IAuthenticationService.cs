@@ -9,6 +9,7 @@ namespace BudgetManager.Models.Services
     {
         Task<ResultResponse<LoggedUserDto>> LoginAsync(LoginRequest request);
         Task<ResultResponse<LoggedUserDto>> GetLoggedUserDtoAsync(string refreshToken = null);
+        Task<BaseResponse> EditAsync(EditLoggedUserRequest request);
         Task<LoggedUser> GetLoggedUserAsync(string refreshToken = null);
         Task<ResultResponse<LoggedUserDto>> RefreshTokenAsync(RefreshTokenRequest request);
         Task<BaseResponse> RegisterAsync(RegisterRequest request);

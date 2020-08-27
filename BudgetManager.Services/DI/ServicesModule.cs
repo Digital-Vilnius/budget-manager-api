@@ -22,7 +22,6 @@ namespace BudgetManager.Services.DI
             services.AddScoped<IAccountUserService, AccountUserService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IInvitationService, InvitationService>();
-            services.AddScoped<IUserService, UserService>();
         }
     }
 }

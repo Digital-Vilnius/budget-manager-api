@@ -26,10 +26,6 @@ namespace BudgetManager.Services.Mapper
         {
             CreateMap<LoggedUser, LoggedUserDto>()
                 .ForMember(
-                    dest => dest.Id,
-                    opt => opt.MapFrom(src => src.User.Id)
-                )
-                .ForMember(
                     dest => dest.RefreshToken,
                     opt => opt.MapFrom(src => src.User.RefreshToken)
                 );
@@ -47,7 +43,7 @@ namespace BudgetManager.Services.Mapper
             // User
             
             CreateMap<User, UserDto>();
-            
+
             // Tags
             
             CreateMap<Tag, TagsListItemDto>().ForMember(

@@ -8,6 +8,7 @@ using BudgetManager.Models;
 using BudgetManager.Models.Repositories;
 using BudgetManager.Models.Services;
 using Microsoft.AspNetCore.Http;
+using NotImplementedException = System.NotImplementedException;
 
 namespace BudgetManager.Services
 {
@@ -64,6 +65,18 @@ namespace BudgetManager.Services
             var loggedUser = await GetLoggedUserAsync();
             var loggedUserDto = _mapper.Map<LoggedUser, LoggedUserDto>(loggedUser);
             return new ResultResponse<LoggedUserDto>(loggedUserDto);
+        }
+
+        public async Task<BaseResponse> EditAsync(EditLoggedUserRequest request)
+        {
+            var loggedUser = await GetLoggedUserAsync();
+            loggedUser.User.Email = request.Email;
+            loggedUser.User.Locale = request.Locale;
+            loggedUser.User.FullName = request.FullName;
+            
+            _userRepository.Update(loggedUser.User);
+            await _unitOfWork.SaveChangesAsync();
+            return new BaseResponse();
         }
 
         public async Task<LoggedUser> GetLoggedUserAsync(string refreshToken = null)
