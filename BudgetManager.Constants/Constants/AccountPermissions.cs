@@ -34,17 +34,17 @@
         
         public static class Account
         {
-            public const string View = "Permissions.Account.View";
-            public const string Edit = "Permissions.Account.Edit";
-            public const string Delete = "Permissions.Account.Delete";
+            public const string View = "AccountPermissions.Account.View";
+            public const string Edit = "AccountPermissions.Account.Edit";
+            public const string Delete = "AccountPermissions.Account.Delete";
         }
         
         public static class Invitations
         {
-            public const string View = "Permissions.Invitations.View";
-            public const string Edit = "Permissions.Invitations.Edit";
-            public const string Add = "Permissions.Invitations.Add";
-            public const string Delete = "Permissions.Invitations.Delete";
+            public const string View = "AccountPermissions.Invitations.View";
+            public const string Edit = "AccountPermissions.Invitations.Edit";
+            public const string Add = "AccountPermissions.Invitations.Add";
+            public const string Delete = "AccountPermissions.Invitations.Delete";
         }
     }
 }

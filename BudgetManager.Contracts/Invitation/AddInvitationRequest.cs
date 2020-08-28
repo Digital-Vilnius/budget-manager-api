@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BudgetManager.Constants.Enums;
 
 namespace BudgetManager.Contracts.Invitation
 {
@@ -6,6 +7,6 @@ namespace BudgetManager.Contracts.Invitation
     {
         public string Email { get; set; }
         
-        public List<string> Roles { get; set; }
+        public List<Roles> Roles { get; set; }
     }
 }
