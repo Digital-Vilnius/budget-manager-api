@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using BudgetManager.Constants.Enums;
 
 namespace BudgetManager.Models
@@ -8,6 +9,9 @@ namespace BudgetManager.Models
         public string Title { get; set; }
         
         public AccountTypes Type { get; set; }
+        
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal? PlannedBudget { get; set; }
         
         public List<AccountUser> AccountUsers { get; set; } = new List<AccountUser>();
         

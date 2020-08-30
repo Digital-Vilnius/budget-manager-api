@@ -78,6 +78,7 @@ namespace BudgetManager.Services
             
             category.Title = request.Title;
             category.Description = request.Description;
+            category.PlannedBudget = request.PlannedBudget;
             _categoryRepository.Update(category);
             await _unitOfWork.SaveChangesAsync();
             return new BaseResponse();

@@ -10,6 +10,8 @@ namespace BudgetManager.Dtos.Tag
         
         public decimal Total { get; set; }
         
+        public decimal PlannedBudget { get; set; }
+        
         public AccountUsersListItemDto CreatedBy { get; set; }
     }
 }

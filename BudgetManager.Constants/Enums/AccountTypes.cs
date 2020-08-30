@@ -2,8 +2,7 @@
 {
     public enum AccountTypes
     {
-        Individual,
-        Family,
-        Business
+        Planner,
+        Manager
     }
 }

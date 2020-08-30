@@ -95,6 +95,14 @@ namespace BudgetManager.Services.Mapper
                     opt => opt.MapFrom<BalanceResolver>()
                 )
                 .ForMember(
+                    dest => dest.Expenses,
+                    opt => opt.MapFrom<ExpensesResolver>()
+                )
+                .ForMember(
+                    dest => dest.Incomes,
+                    opt => opt.MapFrom<IncomesResolver>()
+                )
+                .ForMember(
                     dest => dest.Permissions,
                     opt => opt.MapFrom<PermissionsResolver>()
                 )

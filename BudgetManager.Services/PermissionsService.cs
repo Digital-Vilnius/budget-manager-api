@@ -59,14 +59,6 @@ namespace BudgetManager.Services
                 permissions.Add(AccountPermissions.Transactions.Edit);
                 permissions.Add(AccountPermissions.Transactions.View);
                 permissions.Add(AccountPermissions.Transactions.Delete);
-                // Account users
-                permissions.Add(AccountPermissions.AccountUsers.View);
-                permissions.Add(AccountPermissions.AccountUsers.Delete);
-                // Invitations
-                permissions.Add(AccountPermissions.Invitations.Add);
-                permissions.Add(AccountPermissions.Invitations.Edit);
-                permissions.Add(AccountPermissions.Invitations.View);
-                permissions.Add(AccountPermissions.Invitations.Delete);
             }
 
             if (roles.Contains(Roles.User))

@@ -1,71 +1,71 @@
 ﻿using System.Threading.Tasks;
 using BudgetManager.Constants.Constants;
-using BudgetManager.Contracts.Category;
+using BudgetManager.Contracts.Transaction;
 using BudgetManager.Models.Services;
 using BudgetManager.System.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BudgetManager.Controllers
+namespace BudgetManager.Controllers.Account
 {
     [ApiController]
     [Route("api/account/{accountId}/[controller]")]
-    public class CategoriesController : ControllerBase
+    public class TransactionsController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ITransactionService _transactionService;
 
-        public CategoriesController(ICategoryService categoryService)
+        public TransactionsController(ITransactionService transactionService)
         {
-            _categoryService = categoryService;
+            _transactionService = transactionService;
         }
         
         [HttpPost]
-        [Authorize(AccountPermissions.Categories.Add)]
-        public async Task<IActionResult> Add([FromBody] AddCategoryRequest request, [FromRoute] int accountId)
+        [Authorize(AccountPermissions.Transactions.Add)]
+        public async Task<IActionResult> Add([FromBody] AddTransactionRequest request, [FromRoute] int accountId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
 
-            var response = await _categoryService.AddAsync(request, accountId);
+            var response = await _transactionService.AddAsync(request, accountId);
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
         
         [HttpPut]
-        [Authorize(AccountPermissions.Categories.Edit)]
-        public async Task<IActionResult> Edit([FromBody] EditCategoryRequest request, [FromRoute] int accountId)
+        [Authorize(AccountPermissions.Transactions.Edit)]
+        public async Task<IActionResult> Edit([FromBody] EditTransactionRequest request, [FromRoute] int accountId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
 
-            var response = await _categoryService.EditAsync(request, accountId);
+            var response = await _transactionService.EditAsync(request, accountId);
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
         
         [HttpDelete("{id}")]
-        [Authorize(AccountPermissions.Categories.Delete)]
+        [Authorize(AccountPermissions.Transactions.Delete)]
         public async Task<IActionResult> Delete([FromRoute] int id, [FromRoute] int accountId)
         {
-            var response = await _categoryService.DeleteAsync(id, accountId);
+            var response = await _transactionService.DeleteAsync(id, accountId);
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
 
         [HttpGet]
-        [Authorize(AccountPermissions.Categories.View)]
-        public async Task<IActionResult> List([FromQuery] ListCategoriesRequest request, [FromRoute] int accountId)
+        [Authorize(AccountPermissions.Transactions.View)]
+        public async Task<IActionResult> List([FromQuery] ListTransactionsRequest request, [FromRoute] int accountId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
-            
-            var response = await _categoryService.ListAsync(request, accountId);
+
+            var response = await _transactionService.ListAsync(request, accountId);
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }
         
         [HttpGet("{id}")]
-        [Authorize(AccountPermissions.Categories.View)]
+        [Authorize(AccountPermissions.Transactions.View)]
         public async Task<IActionResult> Get([FromRoute] int id, [FromRoute] int accountId)
         {
-            var response = await _categoryService.GetAsync(id, accountId);
+            var response = await _transactionService.GetAsync(id, accountId);
             if (!response.IsValid) return BadRequest(response.Message);
             return Ok(response);
         }

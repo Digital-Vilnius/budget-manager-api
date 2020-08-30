@@ -8,7 +8,13 @@ namespace BudgetManager.Dtos.Account
         
         public string Type { get; set; }
         
+        public decimal PlannedBudget { get; set; }
+        
         public decimal Balance { get; set; }
+        
+        public decimal Expenses { get; set; }
+        
+        public decimal Incomes { get; set; }
         
         public List<string> Permissions { get; set; }
         

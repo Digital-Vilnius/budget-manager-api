@@ -78,6 +78,7 @@ namespace BudgetManager.Services
             
             tag.Title = request.Title;
             tag.Description = request.Description;
+            tag.PlannedBudget = request.PlannedBudget;
             _tagRepository.Update(tag);
             await _unitOfWork.SaveChangesAsync();
             return new BaseResponse();

@@ -8,7 +8,9 @@ namespace BudgetManager.Models.Services
     public interface IInvitationService
     {
         Task<ListResponse<InvitationsListItemDto>> ListAsync(ListInvitationsRequest request, int accountId);
+        Task<ListResponse<InvitationsListItemDto>> ListAsync(ListInvitationsRequest request);
         Task<ResultResponse<InvitationDto>> GetAsync(int id, int accountId);
+        Task<ResultResponse<InvitationDto>> GetAsync(int id);
         Task<BaseResponse> AddAsync(AddInvitationRequest request, int accountId);
         Task<BaseResponse> DeleteAsync(int id, int accountId);
     }

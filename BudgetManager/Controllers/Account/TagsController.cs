@@ -6,7 +6,7 @@ using BudgetManager.System.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BudgetManager.Controllers
+namespace BudgetManager.Controllers.Account
 {
     [ApiController]
     [Route("api/account/{accountId}/[controller]")]

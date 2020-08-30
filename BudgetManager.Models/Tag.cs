@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BudgetManager.Models
 {
@@ -7,6 +8,9 @@ namespace BudgetManager.Models
         public string Title { get; set; }
         
         public string Description { get; set; }
+        
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal? PlannedBudget { get; set; }
         
         public int AccountId { get; set; }
         public Account Account { get; set; }

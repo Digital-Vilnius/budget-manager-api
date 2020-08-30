@@ -8,6 +8,7 @@ using BudgetManager.Models;
 using BudgetManager.Models.Filters;
 using BudgetManager.Models.Repositories;
 using BudgetManager.Models.Services;
+using NotImplementedException = System.NotImplementedException;
 
 namespace BudgetManager.Services
 {
@@ -48,9 +49,30 @@ namespace BudgetManager.Services
             return new ListResponse<InvitationsListItemDto>(invitationsDtosList, invitationsCount);
         }
 
+        public async Task<ListResponse<InvitationsListItemDto>> ListAsync(ListInvitationsRequest request)
+        {
+            var filter = _mapper.Map<ListInvitationsRequest, InvitationsFilter>(request);
+            var paging = _mapper.Map<ListInvitationsRequest, Paging>(request);
+
+            var invitations = await _invitationRepository.GetListAsync(filter, null, paging);
+            var invitationsCount = await _invitationRepository.CountAsync(filter);
+
+            var invitationsDtosList = _mapper.Map<List<Invitation>, List<InvitationsListItemDto>>(invitations);
+            return new ListResponse<InvitationsListItemDto>(invitationsDtosList, invitationsCount);
+        }
+
         public async Task<ResultResponse<InvitationDto>> GetAsync(int id, int accountId)
         {
             var invitation = await _invitationRepository.GetAsync(invitation => invitation.Id == id && invitation.AccountId == accountId);
+            if (invitation == null) return new ResultResponse<InvitationDto>("Invitation is not found");
+
+            var invitationDto = _mapper.Map<Invitation, InvitationDto>(invitation);
+            return new ResultResponse<InvitationDto>(invitationDto);
+        }
+
+        public async Task<ResultResponse<InvitationDto>> GetAsync(int id)
+        {
+            var invitation = await _invitationRepository.GetAsync(invitation => invitation.Id == id);
             if (invitation == null) return new ResultResponse<InvitationDto>("Invitation is not found");
 
             var invitationDto = _mapper.Map<Invitation, InvitationDto>(invitation);
